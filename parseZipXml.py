@@ -7,7 +7,6 @@ import os
 import urllib.request
 import xml.etree.ElementTree
 import shutil
-import sys
 import zipfile
 
 class ClientApp:
@@ -28,7 +27,7 @@ class ClientApp:
             #     headrs = fq.info()
             #     code = fq.getcode()
             #     dataxml = fq.read()
-            #     if code == 200 :
+            #     if code is 200 :
             #         downloadParseXml(dataxml)
             #     else:
             #         tkinter.messagebox.showerror('error information','the request code is ' + repr(code))
@@ -39,8 +38,21 @@ class ClientApp:
             #     pass
             pass
         #打包webpp
-        def unpackwebapp():
-
+        def unpackwebapp(webappmkdir):
+            print('unpack webapp path :'+ webappmkdir)
+            unpack_zip = zipfile.ZipFile('webapp.zip','w')
+            for dirpath, dirnames, filenames in os.walk(webappmkdir):
+                for filename in filenames:
+                    # print(dirpath)
+                    # print(filename)
+                    # print(os.path.join(dirpath,filename))
+                    # print(os.path.join('webapp'+os.path.sep+ dirpath.split('webapp')[1],filename))
+                    unpack_zip_path = os.path.join('webapp'+os.path.sep+ dirpath.split('webapp')[1],filename)
+                    print('wait :' + filename)
+                    unpack_zip.write(os.path.join(dirpath,filename),unpack_zip_path)
+                    print('success :' + filename)
+            print('done')
+            unpack_zip.close()
             pass
         #检校md5
         def calibrationMD5():
@@ -74,8 +86,8 @@ class ClientApp:
                 findUrl = rURL.rfind('/')
                 _rurl = rURL[findUrl+1:len(rURL)]
                 zip_all.append(downmkdir+os.path.sep+_rurl)
+                print('request '+rURL +' wait ....')
                 urllib.request.urlretrieve(rURL,downmkdir+os.path.sep+_rurl,reporthook=callback)
-
             #解压zip包到webpp目录
             os.mkdir(webappmkdir)
             print('mkdir:'+ webappmkdir)
@@ -85,7 +97,6 @@ class ClientApp:
                 zip_name_list = zip_file.namelist()
                 zip_info_list = zip_file.infolist()
                 for zip_c_file in zip_name_list:
-
                     if zip_c_file[-1] is zip_name_list[0][-1]:
                         os.mkdir(webappmkdir+os.path.sep+zip_c_file)
                         print('mkdir:'+ webappmkdir+os.path.sep+zip_c_file)
@@ -93,11 +104,13 @@ class ClientApp:
                         f_zip = open(webappmkdir+os.path.sep+zip_c_file,'w')
                         print('open:'+ webappmkdir+os.path.sep+zip_c_file)
                         zip_red = zip_file.read(zip_c_file)
-                        f_zip.write(zip_red.decode('utf-8'))
+                        #转码
+                        f_zip.write(zip_red.decode('utf-8','ignore'))
                         f_zip.close()
                     pass
                 zip_file.close()
                 pass
+            unpackwebapp(webappmkdir)
             pass
         #解析xml
         def handlerparseXML(event):
@@ -143,6 +156,5 @@ class ClientApp:
         self.root.mainloop()
         pass
     pass
-
 app = ClientApp()
 app.loop()
