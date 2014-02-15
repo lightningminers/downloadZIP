@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+  <entry>
+    <zip>http://www.python.org/ftp/python/2.7.3/Python-2.7.3.tgz</zip>
+  </entry>
+  <!--<entry>
+    <zip>https://github.com/xiangwenwen/karazhan/archive/master.zip</zip>
+  </entry>
+  <entry>
+    <zip>https://github.com/xiangwenwen/wenren-resume/archive/master.zip</zip>
+  </entry>-->
+</root>
