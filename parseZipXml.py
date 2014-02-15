@@ -8,6 +8,7 @@ import urllib.request
 import xml.etree.ElementTree
 import shutil
 import sys
+import zipfile
 
 class ClientApp:
     def __init__(self,width=420,height=100):
@@ -18,9 +19,88 @@ class ClientApp:
         label.pack(padx=5,pady=5,anchor='w')
         pass
     def handler(self):
+        workpath = os.getcwd()
+        #处理请求，并解析xml
+        def handlerURL(event):
+            # val = url_input.get()
+            # try:
+            #     fq = urllib.request.urlopen(val)
+            #     headrs = fq.info()
+            #     code = fq.getcode()
+            #     dataxml = fq.read()
+            #     if code == 200 :
+            #         downloadParseXml(dataxml)
+            #     else:
+            #         tkinter.messagebox.showerror('error information','the request code is ' + repr(code))
+            #     #关闭请求
+            #     fq.close()
+            # except ValueError:
+            #     tkinter.messagebox.showerror('error information','Error:'+repr(ValueError))
+            #     pass
+            pass
+        #打包webpp
+        def unpackwebapp():
+
+            pass
+        #检校md5
+        def calibrationMD5():
+
+            pass
+        #下载zip文件并解压缩至webapp
+        def zipDecompression(dowbloadall):
+            #生成目录
+            workmkdir = ['download']
+            for wkdir in workmkdir:
+                lastwkdir = workpath + os.path.sep + wkdir
+                print('mkdir:'+ lastwkdir)
+                if os.path.exists(lastwkdir):
+                    shutil.rmtree(lastwkdir)
+                    os.mkdir(lastwkdir)
+                else:
+                    os.mkdir(lastwkdir)
+            #显示下载进度
+            def callback(count, blockSize, totalSize):
+                per = 100.0*count*blockSize/totalSize
+                if per > 100:
+                    per = 100
+                    openSearchXml.option_clear()
+                print('download '+rURL+'：%.2f%%'%per)
+                pass
+            downmkdir = workpath+os.path.sep+'download'
+            webappmkdir = downmkdir + os.path.sep + 'webapp'
+            #下载远程资源到本地
+            zip_all = []
+            for rURL in dowbloadall:
+                findUrl = rURL.rfind('/')
+                _rurl = rURL[findUrl+1:len(rURL)]
+                zip_all.append(downmkdir+os.path.sep+_rurl)
+                urllib.request.urlretrieve(rURL,downmkdir+os.path.sep+_rurl,reporthook=callback)
+
+            #解压zip包到webpp目录
+            os.mkdir(webappmkdir)
+            print('mkdir:'+ webappmkdir)
+            # print(zip_all)
+            for zip_app in zip_all:
+                zip_file = zipfile.ZipFile(zip_app,'r')
+                zip_name_list = zip_file.namelist()
+                zip_info_list = zip_file.infolist()
+                for zip_c_file in zip_name_list:
+
+                    if zip_c_file[-1] is zip_name_list[0][-1]:
+                        os.mkdir(webappmkdir+os.path.sep+zip_c_file)
+                        print('mkdir:'+ webappmkdir+os.path.sep+zip_c_file)
+                    else:
+                        f_zip = open(webappmkdir+os.path.sep+zip_c_file,'w')
+                        print('open:'+ webappmkdir+os.path.sep+zip_c_file)
+                        zip_red = zip_file.read(zip_c_file)
+                        f_zip.write(zip_red.decode('utf-8'))
+                        f_zip.close()
+                    pass
+                zip_file.close()
+                pass
+            pass
         #解析xml
         def handlerparseXML(event):
-            workpath = os.getcwd()
             #打开一个xml文件
             filename = tkinter.filedialog.askopenfilename(initialdir=workpath)
             if len(filename) == 0 :
@@ -32,39 +112,17 @@ class ClientApp:
             #解析xml
             xmlContent = xml.etree.ElementTree.parse(filename)
             # messagePrint.insert('end','\n')
-            # messagePrint.insert('end','path:' + filename +' \n\n')
+            print('path:' + filename)
             #根元素
             elemtroot = xmlContent.getroot()
-            # messagePrint.insert('end','start：load xml success and parse xml \n\n')
+            print('start：load xml success and parse xml')
             #查找元素节点
-            zipall = []
+            dowbloadall = []
             for elemtChild in elemtroot:
                 for elemtzip in elemtChild:
-                    zipall.append(elemtzip.text)
+                    dowbloadall.append(elemtzip.text)
             # print(elemtroot)
-            # print(zipall)
-            #生成目录
-            workmkdir = ['download','webapp','log']
-            for wkdir in workmkdir:
-                lastwkdir = workpath + os.path.sep + wkdir
-                # messagePrint.insert('end','mkdir:'+ lastwkdir+'\n\n')
-                if os.path.exists(lastwkdir):
-                    shutil.rmtree(lastwkdir)
-                    os.mkdir(lastwkdir)
-                else:
-                    os.mkdir(lastwkdir)
-            #显示下载进度
-            def callback(count, blockSize, totalSize):
-                per = 100.0*count*blockSize/totalSize
-                if per > 100:
-                    per = 100
-                print('end','%.2f%%'%per)
-                pass
-            print(zipall)
-            #下载远程资源到本地
-            for rURL in zipall:
-                print(rURL)
-                urllib.request.urlretrieve(rURL,workpath+os.path.sep+'download'+os.path.sep+'python.tgz',reporthook=callback)
+            zipDecompression(dowbloadall)
             pass
         #GUI空间界面
         openSearchXml = tkinter.Button(self.root,text='open',width=10,height=1)
