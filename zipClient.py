@@ -8,7 +8,7 @@ import xml
 
 #GUI CLASS
 class ClientApp:
-    def __init__(self,width=450,height=220):
+    def __init__(self,width=650,height=550):
         self.root = tkinter.Tk()
         self.root.geometry('{0}x{1}'.format(width,height))
         self.root.title('downloadZIP for parse build')
@@ -52,6 +52,10 @@ class ClientApp:
             except ValueError:
                 tkinter.messagebox.showerror('error information','Error:'+repr(ValueError))
                 pass
+            pass
+
+        def handlerParseXml():
+            print(123)
             pass
         #控件GUI
         label = tkinter.Label(self.root,text='download url:')
