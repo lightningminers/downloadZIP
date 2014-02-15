@@ -2,5 +2,6 @@
 ## file
 #############
 .idea
+nodejs-server
 node_modules
 download
