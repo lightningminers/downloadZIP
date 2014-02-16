@@ -8,6 +8,8 @@ import urllib.request
 import xml.etree.ElementTree
 import shutil
 import zipfile
+import hashlib
+
 
 class ClientApp:
     def __init__(self,width=420,height=100):
@@ -93,23 +95,24 @@ class ClientApp:
             print('mkdir:'+ webappmkdir)
             # print(zip_all)
             for zip_app in zip_all:
-                zip_file = zipfile.ZipFile(zip_app,'r')
-                zip_name_list = zip_file.namelist()
-                zip_info_list = zip_file.infolist()
-                for zip_c_file in zip_name_list:
-                    if zip_c_file[-1] is zip_name_list[0][-1]:
-                        os.mkdir(webappmkdir+os.path.sep+zip_c_file)
-                        print('mkdir:'+ webappmkdir+os.path.sep+zip_c_file)
-                    else:
-                        f_zip = open(webappmkdir+os.path.sep+zip_c_file,'w')
-                        print('open:'+ webappmkdir+os.path.sep+zip_c_file)
-                        zip_red = zip_file.read(zip_c_file)
-                        #转码
-                        f_zip.write(zip_red.decode('utf-8','ignore'))
-                        f_zip.close()
+                if zipfile.is_zipfile(zip_app):
+                    zip_file = zipfile.ZipFile(zip_app,'r')
+                    zip_name_list = zip_file.namelist()
+                    zip_info_list = zip_file.infolist()
+                    for zip_c_file in zip_name_list:
+                        if zip_c_file[-1] is zip_name_list[0][-1]:
+                            os.mkdir(webappmkdir+os.path.sep+zip_c_file)
+                            print('mkdir:'+ webappmkdir+os.path.sep+zip_c_file)
+                        else:
+                            f_zip = open(webappmkdir+os.path.sep+zip_c_file,'wb')
+                            print('open:'+ webappmkdir+os.path.sep+zip_c_file)
+                            zip_red = zip_file.read(zip_c_file)
+                            #转码
+                            f_zip.write(zip_red)
+                            f_zip.close()
+                        pass
+                    zip_file.close()
                     pass
-                zip_file.close()
-                pass
             unpackwebapp(webappmkdir)
             pass
         #解析xml
