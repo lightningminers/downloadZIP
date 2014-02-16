@@ -10,7 +10,6 @@ import shutil
 import zipfile
 import hashlib
 
-
 class ClientApp:
     def __init__(self,width=420,height=100):
         self.root = tkinter.Tk()
@@ -74,11 +73,16 @@ class ClientApp:
                     os.mkdir(lastwkdir)
             #显示下载进度
             def callback(count, blockSize, totalSize):
-                per = 100.0*count*blockSize/totalSize
-                if per > 100:
-                    per = 100
-                    openSearchXml.option_clear()
-                print('download '+rURL+'：%.2f%%'%per)
+                #count 已经下载的大小
+                #blockSiz 数据块的大小
+                #totalSiz 远程文件总大小
+                print(totalSize)
+                if not count:
+                    print('connection opened')
+                if totalSize <0:
+                    print('read %d blocks' % count)
+                else:
+                    print ('download '+rURL+' %d KB, totalsize: %d KB' % (count*blockSize/1024.0,totalSize/1024.0))
                 pass
             downmkdir = workpath+os.path.sep+'download'
             webappmkdir = downmkdir + os.path.sep + 'webapp'
