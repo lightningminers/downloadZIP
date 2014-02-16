@@ -5,3 +5,4 @@
 nodejs-server
 node_modules
 download
+__pycache__
