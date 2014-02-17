@@ -103,17 +103,19 @@ class ClientApp:
                     zip_file = zipfile.ZipFile(zip_app,'r')
                     zip_name_list = zip_file.namelist()
                     zip_info_list = zip_file.infolist()
+                    #zip信息
+                    for zip_info_all  in zip_info_list:
+
+                        pass
                     for zip_c_file in zip_name_list:
                         if zip_c_file[-1] is zip_name_list[0][-1]:
                             os.mkdir(webappmkdir+os.path.sep+zip_c_file)
                             print('mkdir:'+ webappmkdir+os.path.sep+zip_c_file)
                         else:
-                            f_zip = open(webappmkdir+os.path.sep+zip_c_file,'wb')
-                            print('open:'+ webappmkdir+os.path.sep+zip_c_file)
-                            zip_red = zip_file.read(zip_c_file)
-                            #转码
-                            f_zip.write(zip_red)
-                            f_zip.close()
+                            with open(webappmkdir+os.path.sep+zip_c_file,'wb') as f_zip:
+                                print('open:'+ webappmkdir+os.path.sep+zip_c_file)
+                                zip_red = zip_file.read(zip_c_file)
+                                f_zip.write(zip_red)
                         pass
                     zip_file.close()
                     pass
