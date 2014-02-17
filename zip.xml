@@ -3,7 +3,7 @@
   <entry>
     <zip>https://github.com/xiangwenwen/kalimdor/archive/master.zip</zip>
   </entry>
-  <entry>
-    <zip>https://github.com/xiangwenwen/django/archive/soc2009/admin-ui.zip</zip>
-  </entry>
+  <!--<entry>-->
+    <!--<zip>https://github.com/xiangwenwen/django/archive/soc2009/admin-ui.zip</zip>-->
+  <!--</entry>-->
 </feed>
