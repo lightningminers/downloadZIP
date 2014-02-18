@@ -3,6 +3,7 @@ __author__ = 'xiangwenwen'
 import suds.client
 import httplib2
 import logging
+import xml.dom.minidom
 
 # client http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx
 
@@ -19,3 +20,4 @@ header = '''
 # _client = suds.client.Client('http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx?wsdl')
 # print(_client.service.test(__inject={'msg':header}))
 # print(_client)
+
