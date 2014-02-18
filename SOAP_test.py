@@ -6,7 +6,7 @@ import sys
 import httplib2
 import xml.dom.minidom
 import http.client
-import urllib.request
+import urllib.parse
 
 # client http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx
 
@@ -38,8 +38,8 @@ def testSuds():
     url = 'http://webservice.webxml.com.cn/WebServices/MobileCodeWS.asmx?wsdl'
     client = suds.client.Client(url)
     print(client)
-    # result = client.service.getMobileCodeInfo(15989012552)
-    # print(result)
+    result = client.service.getMobileCodeInfo(15989012552)
+    print(result)
     pass
 # testSuds()
 
@@ -83,9 +83,9 @@ dom.appendChild(root)
 #http://www.wanyan.com/vote/vote-star!getTopVoteStarByMonth.dhtml
 #POST是成功的
 web = http.client.HTTPConnection('www.wanyan.com')
-webDate = str({'rownum':'4'})
+webDate = str({'rownum':'3'})
 webHead = {
-    'Host':'wenren.ddnode.com',
+    'Host':'www.wanyan.com',
     'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
     'Content-Length':'%d' % len(webDate),
     'X-Requested-With':'XMLHttpRequest',
@@ -109,3 +109,22 @@ print(res.read())
 # _client = suds.client.Client('http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx?wsdl')
 # print(_client)
 # print(_client.service.Request(header))
+
+
+#测试soap webservice
+#http://webservice.webxml.com.cn/WebServices/MobileCodeWS.asmx?wsdl
+
+codeWS = http.client.HTTPConnection('webservice.webxml.com.cn')
+codeWSHead = {
+    'Host':'webservice.webxml.com.cn',
+    'Content-Type':'text/xml; charset=utf-8',
+    'Content-Length':'%d' % len(webDate),
+    'SOAPAction':'/',
+    'User-Agent':'Python Post'
+}
+codeWS.request('GET','/WebServices/MobileCodeWS.asmx?wsdl',headers=codeWSHead)
+
+codeRES = codeWS.getresponse()
+print(codeRES.read().getMobileCodeInfo(15989012552))
+
+# urllib.parse.urlencode()
