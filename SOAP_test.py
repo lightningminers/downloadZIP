@@ -6,16 +6,10 @@ import sys
 import httplib2
 import xml.dom.minidom
 import http.client
+import urllib.request
 
 # client http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx
 
-#快速测试suds 运行情况
-def testSuds():
-    url = 'http://webservice.webxml.com.cn/WebServices/MobileCodeWS.asmx?wsdl'
-    client = suds.client.Client(url)
-    result = client.service.getMobileCodeInfo(15989012552)
-    print(result)
-    pass
 
 header = '''
     <?xml version="1.0"?>
@@ -38,6 +32,16 @@ class OutgoingFilter(logging.Filter):
     def filter(self, record):
         return record.msg.startswith('sending:')
 handler.addFilter(OutgoingFilter())
+
+#快速测试suds 运行情况
+def testSuds():
+    url = 'http://webservice.webxml.com.cn/WebServices/MobileCodeWS.asmx?wsdl'
+    client = suds.client.Client(url)
+    print(client)
+    # result = client.service.getMobileCodeInfo(15989012552)
+    # print(result)
+    pass
+# testSuds()
 
 #创建一个提交xml
 
@@ -74,22 +78,26 @@ dom.appendChild(root)
 # f = open('d:\\Users\\wwxiang\\Desktop\\zip.xml','w')
 # dom.writexml(f,'',' ','\n','utf-8')
 # f.close()
+#http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx
+
+#http://www.wanyan.com/vote/vote-star!getTopVoteStarByMonth.dhtml
+#POST是成功的
+web = http.client.HTTPConnection('www.wanyan.com')
+webDate = str({'rownum':'4'})
+webHead = {
+    'Host':'wenren.ddnode.com',
+    'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+    'Content-Length':'%d' % len(webDate),
+    'X-Requested-With':'XMLHttpRequest',
+    'User-Agent':'Python Post'
+}
+web.request('POST','/vote/vote-star!getTopVoteStarByMonth.dhtml',body=webDate,headers=webHead)
+res = web.getresponse()
+print(res.read())
 
 # webservice = http.client.HTTPConnection('wb.mobile.sh.ctripcorp.com')
-# webservice.putrequest('POST','/hybridpublish/service.asmx')
-# webservice.putheader('Host','wb.mobile.sh.ctripcorp.com')
-# webservice.putheader('User-Agent','Python Post')
-# webservice.putheader('Content-type','application/x-www-form-urlencoded')
-# webservice.putheader('Content-length','%d' % len(header))
-# webservice.putheader('SOAPAction','')
-# webservice.endheaders()
-# webservice.send(header)
-# statuscode, statusmessage, headers = webservice.getresponse()
-# print(statuscode)
-# print(statusmessage)
-# print(headers)
-# res = webservice.getresponse().read()
 # print(res)
+
 
 
 # mo_ctrip =  suds.client.Client('http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx?wsdl')
