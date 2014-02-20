@@ -56,5 +56,5 @@ print(bodyXML)
 #bodyXML  XML一定要进行处理，\r\n这样的特殊字符。另外根据wsdl定义的参数，是string所以不需要转字节码
 webSuds = suds.client.Client('http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx?wsdl')
 print(webSuds)
-res = webSuds.service.Request(bodyNotXML)
+res = webSuds.service.Request(bodyXML)
 print(res)
