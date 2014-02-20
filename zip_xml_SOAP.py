@@ -15,7 +15,26 @@ class OutgoingFilter(logging.Filter):
         return record.msg.startswith('sending:')
 handler.addFilter(OutgoingFilter())
 
-bodyXML = '''<?xml version="1.0"?><Request><Header UserID="CtripTest" SessionID="0d21swty1o22qatzzrke4vip" RequestID="1c34b903-e1f5-4c6d-bbb4-d1bcd0a664e3" RequestType="Operation.HybridPublishService.HybridPackageQueryRQ" ClientIP="172.16.150.76" AsyncRequest="false" Timeout="0" MessagePriority="3" AssemblyVersion="1.0.2.5" RequestBodySize="0" SerializeMode="Xml" RouteStep="1" /><HybridPackageQueryRQ><EnvCode>1</EnvCode><ClientVersion>5.3</ClientVersion></HybridPackageQueryRQ></Request>'''
+bodyNotXML = '<?xml version="1.0"?><Request><Header UserID="CtripTest" SessionID="0d21swty1o22qatzzrke4vip" RequestID="1c34b903-e1f5-4c6d-bbb4-d1bcd0a664e3" RequestType="Operation.HybridPublishService.HybridPackageQueryRQ" ClientIP="172.16.150.76" AsyncRequest="false" Timeout="0" MessagePriority="3" AssemblyVersion="1.0.2.5" RequestBodySize="0" SerializeMode="Xml" RouteStep="1" /><HybridPackageQueryRQ><EnvCode>1</EnvCode><ClientVersion>5.3</ClientVersion></HybridPackageQueryRQ></Request>'
+
+
+#<?xml version="1.0"?><Request><Header UserID="CtripTest"SessionID="0d21swty1o22qatzzrke4vip"RequestID="1c34b903-e1f5-4c6d-bbb4-d1bcd0a664e3"RequestType="Operation.HybridPublishService.HybridPackageQueryRQ"ClientIP="172.16.150.76"AsyncRequest="false"Timeout="0"MessagePriority="3"AssemblyVersion="1.0.2.5"RequestBodySize="0"SerializeMode="Xml"RouteStep="1"/><HybridPackageQueryRQ><EnvCode>1</EnvCode><ClientVersion>5.3</ClientVersion></HybridPackageQueryRQ></Request>
+#sending:
+
+
+bodyXML = '''
+  <?xml version="1.0"?>
+  <Request>
+    <Header UserID="CtripTest" SessionID="0d21swty1o22qatzzrke4vip" RequestID="1c34b903-e1f5-4c6d-bbb4-d1bcd0a664e3" RequestType="Operation.HybridPublishService.HybridPackageQueryRQ" ClientIP="172.16.150.76" AsyncRequest="false" Timeout="0" MessagePriority="3" AssemblyVersion="1.0.2.5" RequestBodySize="0" SerializeMode="Xml" RouteStep="1" />
+    <HybridPackageQueryRQ>
+      <EnvCode>1</EnvCode>
+      <ClientVersion>5.3</ClientVersion>
+    </HybridPackageQueryRQ>
+  </Request>'''
+
+
+bodyXML = ' '.join(bodyXML.split())
+print(bodyXML)
 
 # print(bodyXML)
 #第一种连接方式
@@ -37,6 +56,5 @@ bodyXML = '''<?xml version="1.0"?><Request><Header UserID="CtripTest" SessionID=
 #bodyXML  XML一定要进行处理，\r\n这样的特殊字符。另外根据wsdl定义的参数，是string所以不需要转字节码
 webSuds = suds.client.Client('http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx?wsdl')
 print(webSuds)
-res = webSuds.service.Request(bodyXML)
-
+res = webSuds.service.Request(bodyNotXML)
 print(res)
