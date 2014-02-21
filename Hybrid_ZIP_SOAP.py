@@ -3,9 +3,9 @@ __author__ = 'wwxiang'
 import sys
 import logging
 import os
+import install
 import tkinter
 import tkinter.messagebox
-import suds.client
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree
@@ -13,18 +13,30 @@ import xml.dom.minidom
 import shutil
 import zipfile
 import time
+import subprocess
+modubool = install.sudsInstall()
 
+# print(modubool)
+# subprocess.call('python suds-jurko-0.4.1.jurko.3/setup.py install',shell=True)
+# subprocess.call('python msnlib/setup.py install',shell=True)
+if modubool:
+    subprocess.call('python ez_setup.py install',shell=True)
+    subprocess.call('python suds-jurko-0.4.1.jurko.3/setup.py install',shell=True)
 
+# subprocess.call('python msnlib/setup.py installl',shell=True)
+import suds.client
+
+# import msnlib
 #日志信息
-# handler = logging.StreamHandler(sys.stderr)
-# logging.getLogger('suds.client').setLevel(logging.DEBUG)
-# logger = logging.getLogger('suds.transport.http')
-# logger.setLevel(logging.DEBUG), handler.setLevel(logging.DEBUG)
-# logger.addHandler(handler)
-# class OutgoingFilter(logging.Filter):
-#     def filter(self, record):
-#         return record.msg.startswith('sending:')
-# handler.addFilter(OutgoingFilter())
+handler = logging.StreamHandler(sys.stderr)
+logging.getLogger('suds.client').setLevel(logging.DEBUG)
+logger = logging.getLogger('suds.transport.http')
+logger.setLevel(logging.DEBUG), handler.setLevel(logging.DEBUG)
+logger.addHandler(handler)
+class OutgoingFilter(logging.Filter):
+    def filter(self, record):
+        return record.msg.startswith('sending:')
+handler.addFilter(OutgoingFilter())
 
 #全局信息
 G_LOG = []
