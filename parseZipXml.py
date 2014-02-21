@@ -10,6 +10,8 @@ import shutil
 import zipfile
 import hashlib
 
+
+#打开本地文件版本
 class ClientApp:
     def __init__(self,width=420,height=100):
         self.root = tkinter.Tk()
