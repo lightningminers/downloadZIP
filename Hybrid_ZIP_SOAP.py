@@ -2,11 +2,10 @@ __author__ = 'wwxiang'
 
 import sys
 import logging
+import os
 import tkinter
 import tkinter.messagebox
 import suds.client
-import os
-import http.client
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree
@@ -14,6 +13,7 @@ import xml.dom.minidom
 import shutil
 import zipfile
 import time
+
 
 #日志信息
 # handler = logging.StreamHandler(sys.stderr)
@@ -56,7 +56,7 @@ bodyXML = '''
     <Header UserID="CtripTest" SessionID="0d21swty1o22qatzzrke4vip" RequestID="1c34b903-e1f5-4c6d-bbb4-d1bcd0a664e3" RequestType="Operation.HybridPublishService.HybridPackageQueryRQ" ClientIP="172.16.150.76" AsyncRequest="false" Timeout="0" MessagePriority="3" AssemblyVersion="1.0.2.5" RequestBodySize="0" SerializeMode="Xml" RouteStep="1" />
     <HybridPackageQueryRQ>
       <EnvCode>1</EnvCode>
-      <ClientVersion>5.3</ClientVersion>
+      <ClientVersion>{0}</ClientVersion>
     </HybridPackageQueryRQ>
   </Request>'''
 
@@ -90,7 +90,7 @@ def unzip_file(zipfilename, unziptodir):
 
 #主类
 class ClientApp:
-    def __init__(self,width=600,height=300):
+    def __init__(self,width=600,height=150):
         self.root = tkinter.Tk()
         self.root.geometry('{0}x{1}'.format(width,height))
         self.root.title('downloadZIP')
@@ -200,8 +200,9 @@ class ClientApp:
             pass
         #SOAP WEBSERVICE
         def getValue(event):
-            SOAPURL = getURL.get()
-            SOAPSENDDATA = getSendDate.get(1.0,'end')
+            SOAPURL = 'http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx?wsdl'
+            SOAPSENDDATA = getVersion.get()
+            SOAPSENDDATA = bodyXML.format(SOAPSENDDATA)
             SOAPSENDDATA = formatXML(SOAPSENDDATA)
             try:
                 webservice = suds.client.Client(SOAPURL)
@@ -213,19 +214,19 @@ class ClientApp:
                 raise  ValueError ('url bad')
             handlerparseXML(SOAPRESPONSE)
             pass
-        messURL = tkinter.Label(self.root,text='Request url:')
+        messURL = tkinter.Label(self.root,text='SOAP URL: http://wb.mobile.sh.ctripcorp.com/hybridpublish/service.asmx?wsdl')
         messURL.pack(padx=5,anchor='w')
-        getURL = tkinter.Entry(self.root,width=500)
-        getURL.pack(padx=5,pady=5)
-        parmas = tkinter.Label(self.root,text='Send Date:')
+        parmas = tkinter.Label(self.root,text='Send VERSION:')
         parmas.pack(padx=5,anchor='w')
-        getSendDate = tkinter.Text(self.root,width=400,height=10)
-        getSendDate.pack(padx=5,pady=5,anchor='w')
-        getSendDate.focus_set()
-        Tscrollbar = tkinter.Scrollbar(self.root)
-        Tscrollbar.pack(side='right',fill='y')
-        Tscrollbar.config(command=getSendDate.yview)
-        getSendDate.config(yscrollcommand=Tscrollbar.set)
+        getVersion = tkinter.Entry(self.root,width=500)
+        getVersion.pack(padx=5,pady=5)
+        # getSendDate = tkinter.Text(self.root,width=400,height=10)
+        # getSendDate.pack(padx=5,pady=5,anchor='w')
+        # getSendDate.focus_set()
+        # Tscrollbar = tkinter.Scrollbar(self.root)
+        # Tscrollbar.pack(side='right',fill='y')
+        # Tscrollbar.config(command=getSendDate.yview)
+        # getSendDate.config(yscrollcommand=Tscrollbar.set)
         openSOAP = tkinter.Button(self.root,text='openSOAP and unpackWebapp',width=30,height=1)
         openSOAP.bind('<Button-1>',getValue)
         openSOAP.pack(padx=5,pady=5,anchor='w')
