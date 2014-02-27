@@ -3,7 +3,6 @@ __author__ = 'wwxiang'
 import sys
 import logging
 import os
-import install
 import tkinter
 import tkinter.messagebox
 import urllib.parse
@@ -14,19 +13,25 @@ import shutil
 import zipfile
 import time
 import subprocess
-modubool = install.sudsInstall()
+import suds.client
+# import install
+# modubool = install.sudsInstall()
 
 # print(modubool)
 # subprocess.call('python suds-jurko-0.4.1.jurko.3/setup.py install',shell=True)
 # subprocess.call('python msnlib/setup.py install',shell=True)
-if modubool:
-    subprocess.call('python ez_setup.py install',shell=True)
-    subprocess.call('python suds-jurko-0.4.1.jurko.3/setup.py install',shell=True)
+# if modubool:
+#     subprocess.call('python ez_setup.py install',shell=True)
+#     subprocess.call('python suds-jurko-0.4.1.jurko.3/setup.py install',shell=True)
 
 # subprocess.call('python msnlib/setup.py installl',shell=True)
-import suds.client
-
 # import msnlib
+
+# sys.path.append("./suds-jurko-0.4.1.jurko.3")
+import suds
+
+
+
 #日志信息
 handler = logging.StreamHandler(sys.stderr)
 logging.getLogger('suds.client').setLevel(logging.DEBUG)
