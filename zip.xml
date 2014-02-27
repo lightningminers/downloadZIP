@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en'>
+  <entry>
+    <zip>https://github.com/xiangwenwen/kalimdor/archive/master.zip</zip>
+  </entry>
+  <!--<entry>-->
+    <!--<zip>https://github.com/xiangwenwen/django/archive/soc2009/admin-ui.zip</zip>-->
+  <!--</entry>-->
+</feed>
