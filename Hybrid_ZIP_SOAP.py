@@ -27,8 +27,8 @@ import suds.client
 # subprocess.call('python msnlib/setup.py installl',shell=True)
 # import msnlib
 
-sys.path.append("./suds-jurko-0.4.1.jurko.3")
-import suds
+# sys.path.append("./suds-jurko-0.4.1.jurko.3")
+# import suds
 
 
 
