@@ -212,6 +212,7 @@ class ClientApp:
                 if len(node_text):
                     downloadALL[count].append(node_text)
         self.stage.source = downloadALL
+        help(self.stage)
         pass
     #向远程SOAP webservice 发起请求
     def sendRquest(self,event):
@@ -225,6 +226,8 @@ class ClientApp:
             print('SOAP SUCCESS:'+SOAPURL)
             G_LOG.append('SOAP URL :' +SOAPURL + '\n')
             G_LOG.append('SOAP SEND DATA :' +SOAPSENDDATA + '\n' )
+            self.handlerparseXML(SOAPRESPONSE)
+            print(SOAPRESPONSE)
         except urllib.error.URLError:
             self.error_outinput()
             print('SOAP REQUEST BAD')
