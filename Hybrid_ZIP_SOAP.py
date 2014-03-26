@@ -15,7 +15,6 @@ import time
 import suds.client
 import threading
 import traceback
-import queue
 
 
 # 临时解决依赖模块问题，加入系统模块路径
@@ -83,10 +82,11 @@ def getText(nodelist):
     return ''.join(rc)
     pass
 #在后台处理下载
-class StageHandler(threading.Thread):
-    def __init__(self):
+class StageDownloadHandler(threading.Thread):
+    def __init__(self,address,zip_all):
         threading.Thread.__init__(self)
-        self.source = None
+        self.__add = address
+        self.__zip = zip_all
         pass
     def run(self):
         #显示下载进度
@@ -97,35 +97,22 @@ class StageHandler(threading.Thread):
                 print('远程主机，返回的下载总量为负数')
                 print('read %d blocks' % count)
             else:
-                print ('download '+zip_down[1]+' %d KB, totalsize: %d KB' % (count*blockSize/1024.0,totalSize/1024.0))
+                print ('download '+self.__add+' %d KB, totalsize: %d KB' % (count*blockSize/1024.0,totalSize/1024.0))
             pass
-        #下载zip文件并解压缩至webapp
-        zip_all = []
-        for zip_down in self.source:
-            #远程主机，返回的头信息是否与此匹配，来判断是否是zip文件 application/x-zip-compressed
-            remoteHostTest = urllib.request.urlopen(zip_down[1])
-            if not remoteHostTest.headers['Content-Type'] == 'application/x-zip-compressed':
-                continue
-            print('request '+ zip_down[1] +' wait ....')
-            G_LOG.append('DOWNLOAD '+ zip_down[1] +'\n')
-            try:
-                zip_add = downloadPath+os.path.sep+zip_down[0]+'.zip'
-                zip_all.append(zip_add)
-                urllib.request.urlretrieve(zip_down[1],zip_add,reporthook=downSize)
-            except ValueError:
-                print(zip_down[1])
-                raise ValueError('Error: download url bad'+zip_down[1])
-                G_LOG.append('Error: download url bad'+zip_down[1]+'\n')
-        print('download is success')
-        for zip_app in zip_all:
-            zip_file = zipfile.ZipFile(zip_app,'r')
-            zip_name_file = zip_file.namelist()
-            zip_info_file = zip_file.infolist()
-            for name in zip_name_file:
-                G_LOG.append('UN ZIP '+name + '\n')
-            zip_file.extractall(path = webappmkdir)
-            zip_file.close()
-            pass
+        #远程主机，返回的头信息是否与此匹配，来判断是否是zip文件 application/x-zip-compressed
+        remoteHostTest = urllib.request.urlopen(self.__add)
+        if not remoteHostTest.headers['Content-Type'] == 'application/x-zip-compressed':
+            return
+        print('request '+ self.__add +' wait ....')
+        G_LOG.append('DOWNLOAD '+ self.__add +'\n')
+        try:
+            zip_add = downloadPath+os.path.sep+self.__add+'.zip'
+            self.__zip.append(zip_add)
+            urllib.request.urlretrieve(self.__add,zip_add,reporthook=downSize)
+        except ValueError:
+            print(self.__add)
+            raise ValueError('Error: download url bad'+self.__add)
+            G_LOG.append('Error: download url bad'+self.__add+'\n')
         pass
     pass
 #主类
@@ -203,16 +190,28 @@ class ClientApp:
         SOAP_XML_Result = SOAP_XML_DOM.getElementsByTagName('Result')
         SOAP_XML_HybridPackage = SOAP_XML_DOM.getElementsByTagName('HybridPackage')
         downloadALL = []
-        count = -1
         for node in SOAP_XML_HybridPackage:
-            downloadALL.append([])
-            count += 1
             for node_value in node.childNodes:
                 node_text = getText(node_value.childNodes)
                 if len(node_text):
-                    downloadALL[count].append(node_text)
-        self.stage.source = downloadALL
-        help(self.stage)
+                    downloadALL.append(node_text)
+        count = 0
+        zip_all = []
+        for zip_down in downloadALL:
+            count += 1
+            down = StageDownloadHandler(zip_down,zip_all)
+            down.start()
+            if len(downloadALL) == count:
+                down.join()
+        for zip_app in zip_all:
+            zip_file = zipfile.ZipFile(zip_app,'r')
+            zip_name_file = zip_file.namelist()
+            zip_info_file = zip_file.infolist()
+            for name in zip_name_file:
+                G_LOG.append('UN ZIP '+name + '\n')
+            zip_file.extractall(path = webappmkdir)
+            zip_file.close()
+        self.unpackwebapp()
         pass
     #向远程SOAP webservice 发起请求
     def sendRquest(self,event):
@@ -245,6 +244,6 @@ class ClientApp:
         error_f.close()
         pass
     pass
-stage = StageHandler()
-app = ClientApp(stage=stage)
+
+app = ClientApp()
 app.loop()
