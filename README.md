@@ -2,9 +2,6 @@ dowload zip and unpack webapp (mkdir)
 
 Hybrid wiki : <a href="https://gitcafe.com/leewind/leewind-experiment/wiki/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9E%84%E5%BB%BA-Hybrid%E5%A4%A7%E7%89%88%E6%9C%AC%E6%89%93%E5%8C%85%E5%B7%A5%E5%85%B7">wiki</a>
 
-## python shell 处理##
-
-现在统一使用subprocess来进行shell，subprocess.call('ls',shell=True)，如果在shell参数为True时，会执行此段shell脚本。
 ## python webservice 注意事项##
 
 SOAP 可以使用suds模块，python3可以下载另外一个版本<a href="https://pypi.python.org/pypi/suds-jurko/0.4.1.jurko.3">suds-jurko</a>
