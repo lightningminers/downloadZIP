@@ -13,15 +13,15 @@ SEND DATA，需要注意一点，格式化发送参数，一定不能出现特�
  
  ```python 
  
-        #日志信息
-         handler = logging.StreamHandler(sys.stderr)
-         logging.getLogger('suds.client').setLevel(logging.DEBUG)
-         logger = logging.getLogger('suds.transport.http')
-         logger.setLevel(logging.DEBUG), handler.setLevel(logging.DEBUG)
-         logger.addHandler(handler)
-         class OutgoingFilter(logging.Filter):
-             def filter(self, record):
-                 return record.msg.startswith('sending:')
-         handler.addFilter(OutgoingFilter())
+ #日志信息
+ handler = logging.StreamHandler(sys.stderr)
+ logging.getLogger('suds.client').setLevel(logging.DEBUG)
+ logger = logging.getLogger('suds.transport.http')
+ logger.setLevel(logging.DEBUG), handler.setLevel(logging.DEBUG)
+ logger.addHandler(handler)
+ class OutgoingFilter(logging.Filter):
+     def filter(self, record):
+         return record.msg.startswith('sending:')
+ handler.addFilter(OutgoingFilter())
       
  ```
